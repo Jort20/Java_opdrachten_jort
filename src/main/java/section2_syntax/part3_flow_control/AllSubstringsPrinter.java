@@ -16,7 +16,7 @@ public class AllSubstringsPrinter {
      */
     public static void main(String[] args) {
         final AllSubstringsPrinter asp = new AllSubstringsPrinter();
-        asp.printAllSubstrings("GATCG", true, false); //should print left truncated, left aligned
+        asp.printAllSubstrings("GATCG", true, false); //should print left truncated, right aligned
     }
 
     /**
@@ -25,7 +25,10 @@ public class AllSubstringsPrinter {
      * @param stringToSubstring the string to substring
      */
     public void printSubstringsLeftAlignedLeftTruncated(String stringToSubstring) {
-        //YOUR CODE
+        // Loop to print substrings starting from left and truncating from left
+        for (int i = 0; i < stringToSubstring.length(); i++) {
+            System.out.println(stringToSubstring.substring(i));
+        }
     }
 
     /**
@@ -35,7 +38,35 @@ public class AllSubstringsPrinter {
      * @param leftAligned flag to indicate whether the substrings should be printed left-aligned (or right-aligned)
      */
     public void printAllSubstrings(String stringToSubstring, boolean leftTruncated, boolean leftAligned) {
-        //YOUR CODE
+        int length = stringToSubstring.length();
+
+        if (leftTruncated) {
+            // Left-truncated logic
+            for (int i = 0; i < length; i++) {
+                String substring = stringToSubstring.substring(i);
+                if (leftAligned) {
+                    // Print left-aligned, left-truncated substrings
+                    System.out.println(substring);
+                } else {
+                    // Print right-aligned, left-truncated substrings (add spaces)
+                    String spacer = createSpacer(i);
+                    System.out.println(spacer + substring);
+                }
+            }
+        } else {
+            // Right-truncated logic
+            for (int i = 0; i < length; i++) {
+                String substring = stringToSubstring.substring(0, length - i);
+                if (leftAligned) {
+                    // Print left-aligned, right-truncated substrings
+                    System.out.println(substring);
+                } else {
+                    // Print right-aligned, right-truncated substrings (add spaces)
+                    String spacer = createSpacer(i);
+                    System.out.println(spacer + substring);
+                }
+            }
+        }
     }
 
     /**
@@ -46,14 +77,10 @@ public class AllSubstringsPrinter {
      * @return spacer
      */
     public String createSpacer(int length) {
-//        String spacer = "";
         StringBuilder sb = new StringBuilder("");
         for (int i = 0; i < length; i++) {
             sb.append(" ");
-//            spacer += " ";
-//            spacer = spacer + " ";
         }
-//        return spacer;
         return sb.toString();
     }
 
