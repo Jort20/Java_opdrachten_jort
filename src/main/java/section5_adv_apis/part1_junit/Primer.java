@@ -24,11 +24,14 @@ public class Primer {
      * N?
      * @return
      */
+
     public double getGcPercentage() {
-        //solve this the Java 8 way
+        if (sequence == null || sequence.isEmpty()) {
+            throw new IllegalArgumentException("Sequence is null or empty");
+        }
+//      solve this the Java 8 way
         return (double) getGCcount() / this.sequence.length();
     }
-
     /**
      * This very simple method assigns 2°C to each A-T pair and 4°C to each G-C pair. The Tm then is the sum of these
      * values for all individual pairs in a DNA double strand. This takes into account that the G-C bond is stronger
@@ -37,18 +40,22 @@ public class Primer {
      * @return meltTemp the melting temperature
      */
     public double getMeltingTemperature() {
+        if (sequence == null || sequence.isEmpty()) {
+            throw new IllegalArgumentException("Sequence is null or empty");
+        }
         //solve this the Java 8 way
         final int gcCount = getGCcount();
-        double mt = (gcCount * 4) + ((this.sequence.length() - gcCount) * 2);
-        return mt;
+        return (gcCount * 4) + ((this.sequence.length() - gcCount) * 2);
     }
 
     private int getGCcount() {
         final int[] gcCount = new int[]{0};
         this.sequence.chars().forEach(
                 (n) -> {
-                    if (n == 67 || n == 71) {
+                    if (n == 'C' || n == 'G') {
                         gcCount[0]++;
+                    } else if (n != 'A' && n != 'T') {
+                        throw new IllegalArgumentException("Invalid character in sequence: " + (char) n);
                     }
                 }
         );
@@ -56,6 +63,9 @@ public class Primer {
     }
 
     public int getLength() {
+        if (sequence == null) {
+            return 0;
+        }
         return sequence.length();
     }
 
@@ -64,6 +74,9 @@ public class Primer {
     }
 
     public void setSequence(String sequence) {
+        if (sequence == null) {
+            throw new IllegalArgumentException("Sequence cannot be null");
+        }
         sequence = sequence.toUpperCase();
         this.sequence = sequence;
     }

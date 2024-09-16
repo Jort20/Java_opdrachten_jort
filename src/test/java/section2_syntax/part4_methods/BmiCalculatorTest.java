@@ -32,6 +32,7 @@ class BmiCalculatorTest {
         double weight = 80.0;
         double lenght = 0.0;
         try {
+
             instance.calculateBMI(weight, lenght);
             fail("expected " + IllegalArgumentException.class.getName());
         } catch (IllegalArgumentException ex) {
