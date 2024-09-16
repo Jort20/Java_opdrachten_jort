@@ -3,42 +3,35 @@ package section5_adv_apis.part3_funct.fp_exercise;
 import java.util.List;
 import java.util.Objects;
 
-public class User {
-    private long id;
-    private String name;
-    private int numberOfLogins;
-    private Address address;
+public final class User {
+    private final long id;
+    private final String name;
+    private final int numberOfLogins;
+    private final Address address;
+
+    public User(long id, String name, int numberOfLogins, Address address) {
+        this.id = id;
+        this.name = name;
+        this.numberOfLogins = numberOfLogins;
+        // Defensive copy to avoid mutable object exposure
+        this.address = (address == null ? Address.DEFAULT_NO_ADDRESS : address);
+    }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getNumberOfLogins() {
         return numberOfLogins;
     }
 
-    public void setNumberOfLogins(int numberOfLogins) {
-        this.numberOfLogins = numberOfLogins;
-    }
-
     public Address getAddress() {
-        return (address == null ? Address.DEFAULT_NO_ADDRESS : address);
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+        // Return a defensive copy to avoid mutable object exposure
+        return new Address(address.getStreet(), address.getNumber(), address.getNumberPostfix(), address.getZipCode());
     }
 
     @Override
@@ -56,17 +49,16 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return getId() == user.getId();
+        return id == user.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(id);
     }
 
-    void processAll(List<User> users) {
-        users
-                .stream()
+    public static void processAll(List<User> users) {
+        users.stream()
                 .forEach(x -> {
                     try {
                         System.out.println(x.getName() + ":" + x.getAddress());
@@ -75,8 +67,4 @@ public class User {
                     }
                 });
     }
-
-
-
-
 }
