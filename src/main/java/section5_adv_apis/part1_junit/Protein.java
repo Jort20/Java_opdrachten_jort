@@ -65,6 +65,10 @@ public class Protein {
      * @return fraction the fraction
      */
     public double getAminoAcidFraction(char aminoAcid) {
+        if (this.sequence.isEmpty()) {
+            return 0.0;
+        }
+
         Pattern p = Pattern.compile(Character.toString(aminoAcid));
         Matcher m = p.matcher(this.sequence);
         double count = 0;
@@ -73,7 +77,6 @@ public class Protein {
         }
         return count / this.sequence.length();
     }
-
     /**
      * Checks whether the given sequence consists of only legal amino acid characters.
      *
