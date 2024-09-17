@@ -1,5 +1,8 @@
 package section3_apis.part2_collections;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -8,6 +11,7 @@ import java.util.Objects;
  */
 public class Course {
     private String courseId;
+    private Map<Student, Double> studentGrades = new HashMap<>();
 
     public Course(final String courseId) {
         this.courseId = courseId;
@@ -17,11 +21,24 @@ public class Course {
         return this.courseId;
     }
 
-    @Override
-    public String toString() {
-        return "Course{" +
-                "courseId='" + courseId + '\'' +
-                '}';
+    // Add a grade for a student
+    public void addStudentGrade(Student student, double grade) {
+        studentGrades.put(student, grade);
+    }
+
+    // Get a student's grade
+    public double getGrade(Student student) {
+        return studentGrades.getOrDefault(student, 0.0);
+    }
+
+    // Check if a student is in the course
+    public boolean hasStudent(Student student) {
+        return studentGrades.containsKey(student);
+    }
+
+    // Get all student grades for the course
+    public Map<Student, Double> getAllGrades() {
+        return Collections.unmodifiableMap(studentGrades);
     }
 
     @Override
@@ -37,3 +54,4 @@ public class Course {
         return Objects.hash(this.courseId);
     }
 }
+
