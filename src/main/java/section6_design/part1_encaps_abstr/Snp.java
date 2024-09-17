@@ -1,80 +1,100 @@
 package section6_design.part1_encaps_abstr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Snp {
-    long position;
-    char referenceNucleotide;
-    List<VariantCount> variantCounts;
 
-    /**
-     * A private constructor! You should implement the factory method of the public API.
-     */
-    private Snp() {
+    // Encapsulated private fields
+    private final long position;
+    private final char referenceNucleotide;
+    private final List<VariantCount> variantCounts;
+
+    // Private constructor to enforce encapsulation
+    private Snp(Builder builder) {
+        this.position = builder.position;
+        this.referenceNucleotide = builder.referenceNucleotide;
+        this.variantCounts = builder.variantCounts;
     }
 
-    /**
-     * a dedicated inner class; tightly bound to its enclosing class
-     */
+    // Inner class representing a variant and its count
     private static class VariantCount {
-        char nucleotide;
-        int count;
+        private final char nucleotide;
+        private final int count;
 
         public VariantCount(char nucleotide, int count) {
             this.nucleotide = nucleotide;
             this.count = count;
         }
+
+        public char getNucleotide() {
+            return nucleotide;
+        }
+
+        public int getCount() {
+            return count;
+        }
     }
 
+    // Public API Method: Using Builder pattern instead of factory method
+    public static class Builder {
+        private long position;
+        private char referenceNucleotide;
+        private List<VariantCount> variantCounts = new ArrayList<>();
 
-    /*THE PUBLIC API METHODS TO BE SUPPORTED. DO NOT CHANGE THE SIGNATURE OF THESE!*/
+        public Builder setPosition(long position) {
+            this.position = position;
+            return this;
+        }
 
-    /**
-     * This is a factory method. Much better is the builder pattern here.
-     * This is an extra challenge you could take.
-     *
-     * @return
-     */
-    public static Snp createSnp(long position, char referenceNucleotide, char[] variants, int[] counts) {
-        throw new UnsupportedOperationException("not implemented yet");
+        public Builder setReferenceNucleotide(char referenceNucleotide) {
+            this.referenceNucleotide = referenceNucleotide;
+            return this;
+        }
+
+        public Builder addVariant(char nucleotide, int count) {
+            this.variantCounts.add(new VariantCount(nucleotide, count));
+            return this;
+        }
+
+        public Snp build() {
+            return new Snp(this);
+        }
     }
 
-    /**
-     * Returns a list of variants for this position - including the reference nucleotide
-     *
-     * @return variants-list
-     */
+    // Public API Method: Returns a list of variants (including the reference)
     public List<String> getVariants() {
-        throw new UnsupportedOperationException("not implemented yet");
+        List<String> variants = new ArrayList<>();
+        for (VariantCount vc : variantCounts) {
+            variants.add(vc.getNucleotide() + " (" + vc.getCount() + ")");
+        }
+        return variants;
     }
 
-    /**
-     * Returns the frequency (a value between 0 and 1) of the given variant.
-     *
-     * @param variant
-     * @return
-     */
+    // Public API Method: Returns the frequency of a specific variant
     public double getFrequency(char variant) {
-        throw new UnsupportedOperationException("not implemented yet");
+        int total = variantCounts.stream().mapToInt(VariantCount::getCount).sum();
+        return variantCounts.stream()
+                .filter(vc -> vc.getNucleotide() == variant)
+                .mapToDouble(vc -> (double) vc.getCount() / total)
+                .findFirst()
+                .orElse(0.0);
     }
 
-    /**
-     * Returns the minor allele: the variant with the lowest frequency
-     *
-     * @return
-     */
+    // Public API Method: Returns the minor allele (lowest frequency)
     public char getMinorAllele() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return variantCounts.stream()
+                .min((vc1, vc2) -> Integer.compare(vc1.getCount(), vc2.getCount()))
+                .map(VariantCount::getNucleotide)
+                .orElse(referenceNucleotide);
     }
 
-    /**
-     * Returns the minor allele frequency: the frequency of the variant which is lowest in frequency.
-     * Frequency is a value between 0 and 1.
-     *
-     * @return minor allele frequency
-     */
+    // Public API Method: Returns the frequency of the minor allele
     public double getMinorAlleleFrequency() {
-        throw new UnsupportedOperationException("not implemented yet");
+        int total = variantCounts.stream().mapToInt(VariantCount::getCount).sum();
+        return variantCounts.stream()
+                .min((vc1, vc2) -> Integer.compare(vc1.getCount(), vc2.getCount()))
+                .map(vc -> (double) vc.getCount() / total)
+                .orElse(0.0);
     }
-
 }
