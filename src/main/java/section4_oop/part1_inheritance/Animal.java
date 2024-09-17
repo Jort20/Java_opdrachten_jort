@@ -10,34 +10,37 @@ package section4_oop.part1_inheritance;
  * @author Michiel Noback [michiel.noback@gmail.com]
  * @version 0.0.1
  */
-public class Animal {
-    
-    
-    /**
-     * returns the name of the animal
-     * @return name the species name
-     */
+public abstract class Animal {
+    protected String name;
+    protected double maxSpeed; // Maximum speed in km/h
+    protected int maxAge; // Maximum age in years
+    protected String movementType;
+    protected int currentAge;
+
+    public Animal(String name, double maxSpeed, int maxAge, String movementType, int currentAge) {
+        this.name = name;
+        this.maxSpeed = maxSpeed;
+        this.maxAge = maxAge;
+        this.movementType = movementType;
+        setAge(currentAge); // Ensures valid age
+    }
+
     public String getName() {
-        //YOUR CODE HERE (and remove the throw statement)
-        throw new UnsupportedOperationException("Not implemented yet");
+        return name;
     }
-    
-    /**
-     * returns the movement type
-     * @return movementType the way the animal moves
-     */
+
     public String getMovementType() {
-        //YOUR CODE HERE (and remove the throw statement)
-        throw new UnsupportedOperationException("Not implemented yet");
+        return movementType;
     }
-    
-    /**
-     * returns the speed of this animal
-     * @return speed the speed of this animal
-     */
+
     public double getSpeed() {
-        //YOUR CODE HERE (and remove the throw statement)
-        throw new UnsupportedOperationException("Not implemented yet");
+        return maxSpeed * (0.5 + 0.5 * ((maxAge - currentAge) / (double) maxAge));
     }
-    
+
+    public void setAge(int age) {
+        if (age < 0 || age > maxAge) {
+            throw new IllegalArgumentException("maximum age of Mouse is " + maxAge + " years. Please give new values");
+        }
+        this.currentAge = age;
+    }
 }
