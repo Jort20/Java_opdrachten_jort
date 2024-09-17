@@ -1,7 +1,11 @@
 package section6_design.part0_refactoring;
 
 import static java.lang.Math.*;
-
+/**
+ * Gratefully borrowed and adapted from https://sewiki.iai.uni-bonn.de/teaching/lectures/oosc/2012/assignment_12
+ * @author Michiel Noback (&copy; 2017)
+ * @version 0.01
+ */
 public class Rectangle {
     private Interval horizontal;
     private Interval vertical;
@@ -18,7 +22,9 @@ public class Rectangle {
             this.view.setRectangle(this);
         }
     }
-
+    /**
+     * Create an empty Rectangle with no location.
+     */
     public Rectangle(View view) {
         this.view = view;
         if (view != null) {
@@ -34,12 +40,17 @@ public class Rectangle {
 
     public boolean contains(Rectangle other) {
         if (other.horizontal == null || horizontal == null) return false;
+
         return (horizontal.getStart() <= other.horizontal.getStart() &&
                 other.horizontal.getEnd() <= horizontal.getEnd()) &&
                 (vertical.getStart() <= other.vertical.getStart() &&
                         other.vertical.getEnd() <= vertical.getEnd());
     }
-
+    /**
+     * Enlarge the Rectangle just enough so that it contains the other
+     * Rectangle. If the Rectangle was empty it gets the same extension
+     * as the other Rectangle.
+     */
     public void accommodate(Rectangle other) {
         if (other == null || other.horizontal == null) return;
         if (horizontal == null) {
