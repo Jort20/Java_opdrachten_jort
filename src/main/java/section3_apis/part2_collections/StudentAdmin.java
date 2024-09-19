@@ -103,6 +103,7 @@ public class StudentAdmin {
         if (existingCourse == null) {
             // If the course doesn't exist, return an empty map
             return Collections.emptyMap();
+
         }
 
         // Return the grades from the existing course
