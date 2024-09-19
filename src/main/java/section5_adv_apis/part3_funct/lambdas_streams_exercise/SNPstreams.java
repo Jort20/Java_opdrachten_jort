@@ -1,5 +1,7 @@
 package section5_adv_apis.part3_funct.lambdas_streams_exercise;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +29,39 @@ public class SNPstreams {
     }
 
     public static void getDiseaseCandidateSnps() {
-        //Your code
+        String result = SNP_COLLECTION.stream()
+                .filter(snp -> snp.getMinorAlleleFrequency() >= 0.0001 && snp.getMinorAlleleFrequency() <= 0.1)
+                .map(snp -> String.format("%d;%c;%c;%s", snp.getPosition(), snp.getReference(), snp.getAlternative(), snp.getMinorAlleleFrequency()))
+                .reduce((s1, s2) -> s1 + "\n" + s2)
+                .orElse("");
+
+        System.out.println(result);
     }
 
+
     public static Map<String, List<SNP>> getTransversionsTransitions() {
-        return null;
-        //YOUR CODE
+        Map<String, List<SNP>> result = new HashMap<>();
+
+        List<SNP> transitions = new ArrayList<>();
+        List<SNP> transversions = new ArrayList<>();
+
+        for (SNP snp : SNP_COLLECTION) {
+            char ref = snp.getReference();
+            char alt = snp.getAlternative();
+
+            if ((ref == 'A' && alt == 'G') || (ref == 'G' && alt == 'A') ||
+                    (ref == 'C' && alt == 'T') || (ref == 'T' && alt == 'C')) {
+                transitions.add(snp);
+            } else {
+                transversions.add(snp);
+            }
+        }
+
+        result.put("transition", transitions);
+        result.put("transversion", transversions);
+
+        return result;
     }
+
 
 }
